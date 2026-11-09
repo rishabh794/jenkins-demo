@@ -15,13 +15,18 @@ pipeline {
 
         stage('Test Backend') {
             steps {
-                sh 'docker run --rm -v "$(pwd)/backend":/app -w /app node:18-alpine sh -c "npm install && npm test"'
+                dir('backend') {
+                    sh 'npm install'
+                    sh 'npm test'
+                }
             }
         }
 
         stage('Test Frontend') {
             steps {
-                sh 'docker run --rm -v "$(pwd)/frontend":/app -w /app node:18-alpine sh -c "npm test"'
+                dir('frontend') {
+                    sh 'npm test'
+                }
             }
         }
 
