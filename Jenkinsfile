@@ -47,9 +47,12 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose pull'
-                sh 'docker compose up -d'
+                sh "docker stop fullstack-frontend fullstack-backend || true"
+                sh "docker rm fullstack-frontend fullstack-backend || true"
+                sh "docker pull ${USERNAME}/fullstack-backend:latest"
+                sh "docker pull ${USERNAME}/fullstack-frontend:latest"
+                sh "docker run -d --name fullstack-backend -p 5000:5000 --restart always ${USERNAME}/fullstack-backend:latest"
+                sh "docker run -d --name fullstack-frontend -p 3000:80 --restart always ${USERNAME}/fullstack-frontend:latest"
             }
         }
     }
